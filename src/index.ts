@@ -80,6 +80,7 @@ bot.addCommand('search', async (ctx) => {
 });
 
 bot.start();
+bot.sendMessage(`Hi pappa! I was died, but I'm alive again!`)
 
 schedule.scheduleJob('37 * * * *', async function(){
   console.log("Running scheduled jobs");
