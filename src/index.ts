@@ -58,7 +58,7 @@ bot.addCommand('search', async (ctx) => {
   }
 
   ctx.reply(
-    `Searching fly from ${messageParts[1]} to ${messageParts[2]} on ${messageParts[3]}...`
+    `Searching fly from ${messageParts.from} to ${messageParts.to} on ${messageParts.date.toLocaleString(config.locale)}...`
   );
   const searchObject: ISearch = {
     from: messageParts.from,
