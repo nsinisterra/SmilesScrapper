@@ -1,0 +1,10 @@
+# Ignore artifacts:
+.github
+.lighthouseci
+node_modules
+.eslintrc
+stencil.config.ts
+tsconfig.json
+*.md
+package.json
+package-lock.json

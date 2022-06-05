@@ -1,18 +1,26 @@
-'use strict'
+'use strict';
 
 import playwright from 'playwright';
 
 export default class Browser {
-  private _browser: any;  
+  private _browser: any;
 
   async getApiData(url) {
     const page = await this.openPage(url);
-    const response = await page.waitForResponse(response => response.url().includes('ttps://api-air-flightsearch-prd.smiles.com.br/v1/airlines/search') && response.status() === 200);
-    return response.json();    
+    return (
+      await page.waitForResponse(
+        (response) =>
+          response
+            .url()
+            .includes(
+              'ttps://api-air-flightsearch-prd.smiles.com.br/v1/airlines/search'
+            ) && response.status() === 200
+      )
+    ).json();
   }
 
   async openPage(url) {
-    if(! this._browser) {   
+    if (!this._browser) {
       await this.openBrowser();
     }
 
@@ -23,14 +31,13 @@ export default class Browser {
 
   async openBrowser() {
     this._browser = await playwright.chromium.launch({
-      headless: false // Show the browser. 
+      headless: false // Show the browser.
     });
 
     return this._browser;
   }
 
-  async close()
-  {    
+  async close() {
     await this._browser.close();
   }
 }

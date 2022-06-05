@@ -1,10 +1,10 @@
-import { ISearch } from "./ISearch"
+import { ISearch } from './ISearch';
 
 export interface IConfig {
-  locale: string,
+  locale: string;
   telegram: {
-    key?: string,
-    chat_id?: string,
-  },
-  searchs?: ISearch[]
+    key?: string;
+    chat_id?: string;
+  };
+  searchs?: ISearch[];
 }
