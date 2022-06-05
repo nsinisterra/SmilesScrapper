@@ -38,11 +38,7 @@ export default class Bot {
         }: ${JSON.stringify(ctx.message)} `
       );
     });
-
-    this._bot.command('chatid', (ctx) => {
-      ctx.reply(`Your chat ID is: ${ctx.chat.id}`);
-    });
-
+    
     /* tslint:disable no-console */
     console.log('Smile Telegram Bot: Running...');
     return this._bot.launch();
@@ -66,18 +62,9 @@ export default class Bot {
    */
   parseResultsToText(results: IResult[]) {
     let text: string = 'Search Results';
-
-    if (results.length === 0) {
-      text += `\r\n ===============================`;
-      text += `\r\n No results`;
-      text += `\r\n ===============================`;
-      return text;
-    }
-
-    results.forEach((result: IResult) => {
+    for(const result of results){
       text += this.parseResultToText(result);
-    });
-
+    }
     return text;
   }
 
@@ -88,6 +75,14 @@ export default class Bot {
    */
   parseResultToText(result: IResult): string {
     let text = '';
+
+    if(! result){
+      text += `\r\n ===============================`;
+      text += `\r\n No results`;
+      text += `\r\n ===============================`;
+      return text;
+    }
+
     text += `\r\n ===============================`;
     text += `\r\n Search ${result.search.from} => ${result.search.to} | ${result.search.date}`;
     text += `\r\n ===============================`;
@@ -119,7 +114,7 @@ export default class Bot {
     messageParts.shift();
 
     if (messageParts.length < 1) {
-      return;
+      return {};
     }
 
     messageParts.map((item) => {

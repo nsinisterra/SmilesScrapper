@@ -4,6 +4,11 @@ import { config } from '../config';
 import { IBestFlight, IResult, ISearch } from '../Interfaces';
 
 export default class Searcher {
+  /**
+   * Run a serie of tests
+   * @param searches 
+   * @returns 
+   */
   async executeSearches(searches): Promise<IResult[]> {
     const results: IResult[] = [];
 
@@ -17,6 +22,12 @@ export default class Searcher {
     return results;
   }
 
+  /**
+   * Check one test
+   * 
+   * @param search 
+   * @returns 
+   */
   async executeSeach(search: ISearch): Promise<IResult> {
     const possibleDates = this.getDatesArray(search);
 
@@ -31,6 +42,12 @@ export default class Searcher {
     return;
   }
 
+  /**
+   * Get an array of dates
+   * 
+   * @param search 
+   * @returns 
+   */
   private getDatesArray(search: ISearch): number[] {
     const dates = [];
     let daysAdded = 0;
