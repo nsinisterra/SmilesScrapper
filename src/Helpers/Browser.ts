@@ -31,7 +31,7 @@ export default class Browser {
 
   async openBrowser() {
     this._browser = await playwright.chromium.launch({
-      headless: false // Show the browser.
+      headless: true // Show the browser.
     });
 
     return this._browser;
