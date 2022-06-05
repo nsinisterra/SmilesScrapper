@@ -41,7 +41,7 @@ bot.addCommand('search', async (ctx) => {
       \r\n- date: YYYY-MM-DD
       \r\n- maxBefore: [Optional] If no flights are found on your date, max number of days before your date to search
       \r\n- maxAfter: [Optional] If no flights are found on your date, max number of days after your date to search
-      \r\n\r\nFor example, to search flights from BUE to MIA on Nov 11 you may send /search from:BUE to:MIA date:2022-11-11"`
+      \r\n\r\nFor example, to search flights from BUE to MIA on Nov 11 you may send \r\n/search from:BUE to:MIA date:2022-11-11`
     );
     return;
   }
