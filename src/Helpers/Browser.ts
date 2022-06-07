@@ -1,6 +1,7 @@
 'use strict';
 
 import playwright from 'playwright';
+import { config } from '../config';
 
 export default class Browser {
   private _browser: any;
@@ -31,7 +32,7 @@ export default class Browser {
 
   async openBrowser() {
     this._browser = await playwright.chromium.launch({
-      headless: false // Show the browser.
+      headless: config.playwright.headless // Show the browser.
     });
 
     return this._browser;

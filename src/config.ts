@@ -2,6 +2,9 @@ import { IConfig } from './Interfaces';
 
 export const config: IConfig = {
   locale: process.env.LOCALE ?? 'es-AR',
+  playwright: {
+    headless: ! ((process.env.PLAYWRIGHT_RENDER_BROWSER || 'false') === 'true'),
+  },
   telegram: {
     key: process.env.TELEGRAM_KEY ?? null,
     chat_id: process.env.TELEGRAM_CHAT_ID ?? null
