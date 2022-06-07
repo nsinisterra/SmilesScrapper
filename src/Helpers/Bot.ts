@@ -1,6 +1,6 @@
 import { config } from '../config';
 import { Telegraf } from 'telegraf';
-import { IResult } from '../Interfaces';
+import { IResult, ISearch } from '../Interfaces';
 
 export default class Bot {
   private _bot: Telegraf;
@@ -38,7 +38,7 @@ export default class Bot {
         }: ${JSON.stringify(ctx.message)} `
       );
     });
-    
+
     /* tslint:disable no-console */
     console.log('Smile Telegram Bot: Running...');
     return this._bot.launch();
@@ -63,7 +63,7 @@ export default class Bot {
   parseResultsToText(results: IResult[]) {
     let text: string = 'Search Results';
     for(const result of results){
-      text += this.parseResultToText(result);
+      text += this.parseResultToText(result.search, result);
     }
     return text;
   }
@@ -73,7 +73,7 @@ export default class Bot {
    * @param result
    * @returns
    */
-  parseResultToText(result: IResult): string {
+  parseResultToText(search: ISearch,result: IResult): string {
     let text = '';
 
     if(! result){
@@ -84,19 +84,73 @@ export default class Bot {
     }
 
     text += `\r\n ===============================`;
-    text += `\r\n Search ${result.search.from} => ${result.search.to} | ${result.search.date}`;
+    text += `\r\n Search ${result.search.from} => ${result.search.to} | ${result.search.date} [${search.type.toLowerCase()}]`;
     text += `\r\n ===============================`;
+
+    let functionName = `${search.type.toLowerCase()}SearchParser`;
+    text += this[functionName](result);
+
+    return text;
+  }
+
+  private businessSearchParser(result:IResult){
+    let text = '';    
     text += `\r\n Business Results: ${result.businessResults}`;
     text += `\r\n Economy Results: ${result.economyResults}`;
 
-    if (result.businessResults > 0) {
-      text += `\r\n Best Business Flight: (${result.bestBusinessFlight.date.toLocaleString(
+    if (result.bestBusinessFlight) {
+      text += `\r\n\r\n Best Business Flight: (${result.bestBusinessFlight.date.toLocaleString(
         config.locale
       )}) | Smiles: ${result.bestBusinessFlight.smiles.toLocaleString(
         config.locale
       )} | Paradas: ${result.bestBusinessFlight.stops} | Duración: ${
         result.bestBusinessFlight.duration
       }`;
+    }
+
+    return text;
+  }
+
+  private resumeSearchParser(result:IResult){
+    let text = '';
+    if( result.bestBusinessFlight ){
+      text += `\r\n\r\n Best Business Flight: (${result.bestBusinessFlight.date.toLocaleString(
+        config.locale
+      )}) | Smiles: ${result.bestBusinessFlight.smiles.toLocaleString(
+        config.locale
+      )} | Paradas: ${result.bestBusinessFlight.stops} | Duración: ${
+        result.bestBusinessFlight.duration
+      }`;
+    }else{
+      text += `\r\n Best Business Flight: No flights.`
+    }
+
+    if(result.economyResults > 0){
+      text += `\r\n\r\n Chepeast Economy Flight: (${result.bestEconomyFlights.chepeast.date.toLocaleString(
+        config.locale
+      )}) | Smiles: ${result.bestEconomyFlights.chepeast.smiles.toLocaleString(
+        config.locale
+      )} | Paradas: ${result.bestEconomyFlights.chepeast.stops} | Duración: ${
+        result.bestEconomyFlights.chepeast.duration
+      }`;
+
+      text += `\r\n\r\n Faster Economy Flight: (${result.bestEconomyFlights.faster.date.toLocaleString(
+        config.locale
+      )}) | Smiles: ${result.bestEconomyFlights.faster.smiles.toLocaleString(
+        config.locale
+      )} | Paradas: ${result.bestEconomyFlights.faster.stops} | Duración: ${
+        result.bestEconomyFlights.faster.duration
+      }`;
+
+      text += `\r\n\r\n Less Stops Economy Flight: (${result.bestEconomyFlights.lessStops.date.toLocaleString(
+        config.locale
+      )}) | Smiles: ${result.bestEconomyFlights.lessStops.smiles.toLocaleString(
+        config.locale
+      )} | Paradas: ${result.bestEconomyFlights.lessStops.stops} | Duración: ${
+        result.bestEconomyFlights.lessStops.duration
+      }`;
+    }else{
+      text += `\r\n No good economy flights.`
     }
 
     return text;
@@ -130,11 +184,15 @@ export default class Bot {
    * @param message
    * @returns
    */
-  async sendMessage(message: string) {
-    if (!this._bot) {
+  async sendMessage(message: string, chatId: string = null) {
+    if(! chatId){
+      chatId = config.telegram.chat_id;
+    }
+
+    if (!this._bot || !chatId) {
       return;
     }
 
-    await this._bot.telegram.sendMessage(config.telegram.chat_id, message);
+    await this._bot.telegram.sendMessage(chatId, message);
   }
 }

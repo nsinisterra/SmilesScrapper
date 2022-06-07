@@ -3,8 +3,13 @@ import { ISearch } from './ISearch';
 
 export interface IResult {
   search?: ISearch;
+  awardFares: number;
   businessResults: number;
   bestBusinessFlight?: IBestFlight;
   economyResults: number;
-  bestEconomyFlights?: any[];
+  bestEconomyFlights?: {
+    faster: IBestFlight;
+    chepeast: IBestFlight;
+    lessStops: IBestFlight;
+  };
 }

@@ -13,7 +13,7 @@ export default class Browser {
           response
             .url()
             .includes(
-              'ttps://api-air-flightsearch-prd.smiles.com.br/v1/airlines/search'
+              'https://api-air-flightsearch-prd.smiles.com.br/v1/airlines/search'
             ) && response.status() === 200
       )
     ).json();
@@ -31,7 +31,7 @@ export default class Browser {
 
   async openBrowser() {
     this._browser = await playwright.chromium.launch({
-      headless: true // Show the browser.
+      headless: false // Show the browser.
     });
 
     return this._browser;

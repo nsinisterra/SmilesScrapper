@@ -4,4 +4,6 @@ export interface ISearch {
   date: string;
   maxBefore: number;
   maxAfter: number;
+  type: string;
+  chatId: string;
 }

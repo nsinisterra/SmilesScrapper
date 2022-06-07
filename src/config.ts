@@ -11,8 +11,10 @@ export const config: IConfig = {
       from: 'BUE',
       to: 'MIA',
       date: '2022-11-22',
-      maxBefore: 1,
-      maxAfter: 3
+      maxBefore: 4,
+      maxAfter: 2,
+      chatId: process.env.TELEGRAM_CHAT_ID ?? null,
+      type: 'business'
     }
   ]
 };
