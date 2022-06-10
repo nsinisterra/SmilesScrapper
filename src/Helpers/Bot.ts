@@ -5,6 +5,11 @@ import { IResult, ISearch } from '../Interfaces';
 export default class Bot {
   private _bot: Telegraf;
 
+  private _commandList: Array<{
+    command: string;
+    description: string;
+   }> = [];
+
   /**
    * Bot constructor
    */
@@ -23,6 +28,8 @@ export default class Bot {
     if (!this._bot) {
       return;
     }
+
+    this._bot.telegram.setMyCommands(this._commandList);
 
     this._bot.start((ctx) => {
       ctx.reply(
@@ -50,8 +57,15 @@ export default class Bot {
    * @param command
    * @param callback
    */
-  async addCommand(command, callback) {
+  async addCommand(command, callback, description = undefined) {
     this._bot.command(command, callback);
+
+    if(description){
+      this._commandList.push({
+        command,
+        description
+      });
+    }
   }
 
   /**

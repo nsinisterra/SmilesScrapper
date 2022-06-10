@@ -15,11 +15,11 @@ const bot = new Bot();
 
 bot.addCommand('chatid', (ctx) => {
   ctx.reply(`Your chat ID is: ${ctx.chat.id}`);
-});
+}, 'Get your chat ID');
 
 bot.addCommand('ping', (ctx) => {
   ctx.reply(`Pong!`);
-});
+}, 'Check if bot is alive. Should respond Pong!');
 
 
 /** Search commands */
@@ -28,12 +28,21 @@ bot.addCommand('check', async (ctx) => {
   const searcherObject = new Searcher();  
 
   config.searchs.filter(item => item.chatId == ctx.chat.id).forEach(async search => {
-    const searcherObject = new Searcher();
-    const result = await searcherObject.executeSearch(search);
-
-    if(result){
-      bot.sendMessage(bot.parseResultToText(search, result), search.chatId);
-    }
+    try {
+      const searcherObject = new Searcher();
+      const result = await searcherObject.executeSearch(search);
+  
+      if(result){
+        bot.sendMessage(bot.parseResultToText(search, result), search.chatId);
+      }
+    }catch(e){
+      console.log(e)
+      bot.sendMessage(`====== TECH REPORT ======`);
+      bot.sendMessage(JSON.stringify(search));
+      bot.sendMessage(JSON.stringify(e));
+      bot.sendMessage(`====== ====== ====== ======`);
+      bot.sendMessage("Oops! We wasn't able to search your trip. Please check that the origin and destiny is writen correctly. If problem persist, please, contact to the developer. [ERR 1]", search.chatId);
+    }    
   });
 });
 
@@ -86,13 +95,22 @@ For example, to search flights from BUE to MIA on Nov 11 you may send
     chatId: ctx.chat.id,
     type: messageParts.type
   };
+
+
   const searcherObject = new Searcher();
   searcherObject
     .executeSearch(searchObject)
     .then((result: IResult) => {      
       bot.sendMessage(bot.parseResultToText(searchObject, result), searchObject.chatId);
+    }).catch(e => {
+      bot.sendMessage(`====== TECH REPORT - IN SEARCH ======`);
+      bot.sendMessage(JSON.stringify(searchObject));
+      bot.sendMessage(JSON.stringify(e));
+      bot.sendMessage(`====== ====== ====== ======`);
+      console.log(e);
+      bot.sendMessage("Oops! We wasn't able to search your trip. Please check that the origin and destiny is writen correctly. If problem persist, please, contact to the developer. [ERR 2]", searchObject.chatId);
     });
-});
+}, 'Search your flight');
 
 bot.start();
 bot.sendMessage(`Hi pappa! I was died, but I'm alive again!`)
@@ -101,11 +119,17 @@ schedule.scheduleJob('05 * * * *', async () => {
   console.log("Running scheduled jobs");
 
   config.searchs.forEach(async search => {
-    const searcherObject = new Searcher();
-    const result = await searcherObject.executeSearch(search);
+    try {
+      const searcherObject = new Searcher();
+      const result = await searcherObject.executeSearch(search);
 
-    if(result){
-      bot.sendMessage(bot.parseResultToText(search, result), search.chatId);
+      if(result){
+        bot.sendMessage(bot.parseResultToText(search, result), search.chatId);
+      }
+    }catch(e){
+      bot.sendMessage(`====== TECH REPORT - IN CRON ======`);
+      bot.sendMessage(JSON.stringify(e));
+      bot.sendMessage(`====== ====== ====== ======`);
     }
   });
 });
