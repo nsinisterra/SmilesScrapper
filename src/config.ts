@@ -18,6 +18,24 @@ export const config: IConfig = {
       maxAfter: 2,
       chatId: process.env.TELEGRAM_CHAT_ID ?? null,
       type: 'business'
+    },
+    {
+      from: 'BUE',
+      to: 'NYC',
+      date: '2022-11-22',
+      maxBefore: 4,
+      maxAfter: 0,
+      chatId: process.env.TELEGRAM_CHAT_ID ?? null,
+      type: 'business'
+    },
+    {
+      from: 'BUE',
+      to: 'MCO',
+      date: '2022-11-22',
+      maxBefore: 4,
+      maxAfter: 0,
+      chatId: process.env.TELEGRAM_CHAT_ID ?? null,
+      type: 'business'
     }
   ]
 };
